@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mini App Starter</title>
+  <!-- Official Telegram Mini Apps SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: var(--tg-theme-bg-color, #0f1117);
+      --secondary-bg: var(--tg-theme-secondary-bg-color, #1a1d27);
+      --text: var(--tg-theme-text-color, #f3f4f6);
+      --hint: var(--tg-theme-hint-color, #9ca3af);
+      --accent: var(--tg-theme-button-color, #3b82f6);
+      --accent-text: var(--tg-theme-button-text-color, #ffffff);
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 96px;
+      user-select: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--secondary-bg);
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--accent-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .user-meta h1 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .user-meta p {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 2px;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+    }
+
+    .hero-card {
+      background: var(--secondary-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .score-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--hint);
+    }
+
+    .score-value {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .tap-btn {
+      width: 148px;
+      height: 148px;
+      border-radius: 50%;
+      border: none;
+      background: radial-gradient(circle at 30% 30%, var(--accent), #1d4ed8);
+      color: var(--accent-text);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.35);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .tap-btn:active {
+      transform: scale(0.94);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25);
+    }
+
+    .tap-btn span {
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .action-card {
+      background: var(--secondary-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: left;
+      color: var(--text);
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+
+    .action-card:active {
+      opacity: 0.75;
+    }
+
+    .action-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .action-card p {
+      font-size: 12px;
+      color: var(--hint);
+      line-height: 1.4;
+    }
+
+    .status-bar {
+      font-size: 12px;
+      color: var(--hint);
+      text-align: center;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="user-info">
+        <div class="avatar" id="avatar">G</div>
+        <div class="user-meta">
+          <h1 id="username">Guest Player</h1>
+          <p id="env-status">Loading environment...</p>
+        </div>
+      </div>
+      <span class="badge" id="level-badge">LVL 1</span>
+    </header>
+
+    <section class="hero-card">
+      <div>
+        <div class="score-label">Total Points</div>
+        <div class="score-value" id="score">0</div>
+      </div>
+
+      <button class="tap-btn" id="tap-btn">
+        TAP
+        <span>+1 Point</span>
+      </button>
+    </section>
+
+    <section class="grid">
+      <button class="action-card" id="boost-btn">
+        <h3>⚡ 2x Multiplier</h3>
+        <p id="boost-desc">Cost: 25 pts • Boost per tap</p>
+      </button>
+
+      <button class="action-card" id="invite-btn">
+        <h3>👥 Invite Friend</h3>
+        <p>Share referral link via Telegram</p>
+      </button>
+    </section>
+
+    <div class="status-bar" id="status-log">Ready to build.</div>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    const isTelegram = Boolean(tg && tg.initData);
+
+    // State
+    let score = 0;
+    let multiplier = 1;
+    let boostCost = 25;
+
+    // DOM Elements
+    const scoreEl = document.getElementById("score");
+    const avatarEl = document.getElementById("avatar");
+    const usernameEl = document.getElementById("username");
+    const envStatusEl = document.getElementById("env-status");
+    const levelBadgeEl = document.getElementById("level-badge");
+    const boostDescEl = document.getElementById("boost-desc");
+    const statusLogEl = document.getElementById("status-log");
+
+    function updateUI() {
+      scoreEl.textContent = score.toLocaleString();
+      levelBadgeEl.textContent = `LVL ${multiplier}`;
+      boostDescEl.textContent = `Cost: ${boostCost} pts • +${multiplier}/tap`;
+      document.querySelector("#tap-btn span").textContent = `+${multiplier} Point${multiplier > 1 ? "s" : ""}`;
+
+      if (isTelegram) {
+        tg.MainButton.setText(`CLAIM ${score} PTS`);
+        score > 0 ? tg.MainButton.show() : tg.MainButton.hide();
+      }
+    }
+
+    function saveState() {
+      const payload = JSON.stringify({ score, multiplier, boostCost });
+      if (isTelegram && tg.CloudStorage) {
+        tg.CloudStorage.setItem("game_state", payload);
+      } else {
+        localStorage.setItem("game_state", payload);
+      }
+    }
+
+    function loadState() {
+      if (isTelegram && tg.CloudStorage) {
+        tg.CloudStorage.getItem("game_state", (err, val) => {
+          if (!err && val) applySaved(val);
+        });
+      } else {
+        const val = localStorage.getItem("game_state");
+        if (val) applySaved(val);
+      }
+    }
+
+    function applySaved(raw) {
+      try {
+        const data = JSON.parse(raw);
+        score = data.score || 0;
+        multiplier = data.multiplier || 1;
+        boostCost = data.boostCost || 25;
+        updateUI();
+      } catch (_) {}
+    }
+
+    function initApp() {
+      if (isTelegram) {
+        tg.ready();
+        tg.expand();
+
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+          const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ");
+          usernameEl.textContent = fullName || user.username || "Telegram User";
+          avatarEl.textContent = (user.first_name?.[0] || "T").toUpperCase();
+        }
+        envStatusEl.textContent = `Telegram WebApp v${tg.version}`;
+
+        tg.MainButton.onClick(() => {
+          tg.HapticFeedback?.notificationOccurred("success");
+          tg.showAlert(`Synced ${score} points! Connect a backend webhook or Stars invoice next.`);
+        });
+      } else {
+        envStatusEl.textContent = "Browser Preview Mode";
+      }
+
+      loadState();
+      updateUI();
+    }
+
+    // Tap Action
+    document.getElementById("tap-btn").addEventListener("click", () => {
+      score += multiplier;
+      if (isTelegram) tg.HapticFeedback?.impactOccurred("light");
+      updateUI();
+      saveState();
+    });
+
+    // Upgrade Multiplier
+    document.getElementById("boost-btn").addEventListener("click", () => {
+      if (score < boostCost) {
+        statusLogEl.textContent = `Need ${boostCost - score} more points for upgrade.`;
+        if (isTelegram) tg.HapticFeedback?.notificationOccurred("error");
+        return;
+      }
+      score -= boostCost;
+      multiplier += 1;
+      boostCost = Math.round(boostCost * 2.2);
+      statusLogEl.textContent = `Upgraded to ${multiplier}x per tap!`;
+      if (isTelegram) tg.HapticFeedback?.notificationOccurred("success");
+      updateUI();
+      saveState();
+    });
+
+    // Referral Share
+    document.getElementById("invite-btn").addEventListener("click", () => {
+      const shareText = "Join me in this Telegram Mini App!";
+      const appUrl = "https://t.me/YOUR_BOT_USERNAME/app?startapp=ref123";
+      if (isTelegram) {
+        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(appUrl)}&text=${encodeURIComponent(shareText)}`);
+      } else {
+        navigator.clipboard?.writeText(appUrl);
+        statusLogEl.textContent = "Copied referral link to clipboard (replace YOUR_BOT_USERNAME).";
+      }
+    });
+
+    initApp();
+  </script>
+</body>
+</html>
