@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Gemini Tap Miner</title>
-  <!-- Official Telegram Mini Apps SDK ($0 Free) -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- AdsGram Rewarded Video SDK ($0 Upfront) -->
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
   <style>
     :root {
@@ -67,12 +65,12 @@
       background: var(--card); border: 1px solid var(--border); border-radius: 20px;
       padding: 22px 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px;
     }
-    .stats-row { display: flex; gap: 18px; justify-content: center; font-size: 12px; color: var(--hint); }
+    .stats-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 12px; color: var(--hint); }
     .stats-row strong { color: var(--text); }
     .score { font-size: 46px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
 
     .tap-btn {
-      width: 156px; height: 156px; border-radius: 50%; border: none;
+      width: 156px; height: 156px; border-radius: 50%; border: none; touch-action: manipulation;
       background: radial-gradient(circle at 30% 30%, var(--accent), #1d4ed8);
       color: var(--accent-text); font-size: 20px; font-weight: 800; cursor: pointer;
       box-shadow: 0 12px 28px rgba(59, 130, 246, 0.35); transition: transform 0.06s ease;
@@ -137,25 +135,24 @@
         <div class="avatar" id="avatar">G</div>
         <div>
           <h1 id="username">Guest Miner</h1>
-          <p id="env-label">$0 Free Stack</p>
+          <p id="env-label">$0 Free Stack • Live</p>
         </div>
       </div>
       <div class="header-actions">
-        <button class="sound-btn" id="sound-toggle" title="Toggle Sound">🔊</button>
+        <button class="sound-btn" id="sound-toggle" type="button" title="Toggle Sound">🔊</button>
         <span class="pill" id="rank-pill">LVL 1</span>
       </div>
     </header>
 
-    <!-- TAB 1: MINE -->
     <div class="panel active" id="tab-mine">
       <div class="hero">
         <div class="stats-row">
           <span>Tap: <strong id="stat-tap">+1</strong></span>
           <span>Auto: <strong id="stat-auto">0/s</strong></span>
-          <span>Total Taps: <strong id="stat-taps">0</strong></span>
+          <span>Taps: <strong id="stat-taps">0</strong></span>
         </div>
         <div class="score" id="score">0</div>
-        <button class="tap-btn" id="tap-btn">MINE<small id="tap-sub">+1 pt</small></button>
+        <button class="tap-btn" id="tap-btn" type="button">MINE<small id="tap-sub">+1 pt</small></button>
         <div class="energy-wrap">
           <div class="energy-top">
             <span>⚡ Energy</span>
@@ -168,20 +165,19 @@
       <div class="card">
         <div class="card-info">
           <h3>🎬 Free Energy Refill + 500 Pts</h3>
-          <p>Watch a short rewarded ad (100% free)</p>
+          <p>Watch a short rewarded ad ($0 setup)</p>
         </div>
-        <button class="btn green" id="ad-btn">Watch Ad</button>
+        <button class="btn green" id="ad-btn" type="button">Watch Ad</button>
       </div>
     </div>
 
-    <!-- TAB 2: UPGRADES & STARS -->
     <div class="panel" id="tab-shop">
       <div class="card">
         <div class="card-info">
           <h3>⛏️ Multi-Tap (Lvl <span id="u-tap-lvl">1</span>)</h3>
           <p>+1 point per tap • Cost: <strong id="u-tap-cost">25</strong> pts</p>
         </div>
-        <button class="btn" id="buy-tap">Upgrade</button>
+        <button class="btn" id="buy-tap" type="button">Upgrade</button>
       </div>
 
       <div class="card">
@@ -189,7 +185,7 @@
           <h3>🤖 Auto-Miner (Lvl <span id="u-auto-lvl">0</span>)</h3>
           <p>+1 pt/sec passively • Cost: <strong id="u-auto-cost">100</strong> pts</p>
         </div>
-        <button class="btn" id="buy-auto">Buy</button>
+        <button class="btn" id="buy-auto" type="button">Buy</button>
       </div>
 
       <div class="card">
@@ -197,34 +193,33 @@
           <h3>🔋 Max Energy (Lvl <span id="u-energy-lvl">1</span>)</h3>
           <p>+50 energy cap • Cost: <strong id="u-energy-cost">75</strong> pts</p>
         </div>
-        <button class="btn" id="buy-energy">Upgrade</button>
+        <button class="btn" id="buy-energy" type="button">Upgrade</button>
       </div>
 
       <div class="card">
         <div class="card-info">
           <h3>⭐ VIP 2x Permanent Boost</h3>
-          <p>Instant +5,000 pts & 2x multiplier via Telegram Stars</p>
+          <p>Instant +5,000 pts &amp; 2x multiplier via Telegram Stars</p>
         </div>
-        <button class="btn gold" id="stars-btn">10 ⭐</button>
+        <button class="btn gold" id="stars-btn" type="button">10 ⭐</button>
       </div>
     </div>
 
-    <!-- TAB 3: QUESTS -->
     <div class="panel" id="tab-quests">
       <div class="card">
         <div class="card-info">
           <h3>🎁 Daily Check-In</h3>
           <p>Claim +250 free points every 24 hours</p>
         </div>
-        <button class="btn green" id="daily-btn">Claim</button>
+        <button class="btn green" id="daily-btn" type="button">Claim</button>
       </div>
 
       <div class="card">
         <div class="card-info">
           <h3>🏅 100 Taps Milestone</h3>
-          <p id="m100-desc">Tap 100 times for +500 bonus points</p>
+          <p>Tap 100 times for +500 bonus points</p>
         </div>
-        <button class="btn green" id="m100-btn">Claim</button>
+        <button class="btn green" id="m100-btn" type="button">Claim</button>
       </div>
 
       <div class="card">
@@ -232,50 +227,53 @@
           <h3>👥 Invite a Friend (+1,000 pts)</h3>
           <p>Share your personal Telegram Mini App link</p>
         </div>
-        <button class="btn" id="invite-btn">Invite</button>
+        <button class="btn" id="invite-btn" type="button">Invite</button>
       </div>
     </div>
 
-    <!-- TAB 4: LEADERBOARD -->
     <div class="panel" id="tab-rank">
       <div class="card">
         <div class="card-info">
-          <h3>🏆 Global Top Miners</h3>
-          <p>Verified via HMAC-SHA256 on Cloudflare D1 ($0)</p>
+          <h3>🏆 Leaderboard</h3>
+          <p>Local score active • Connect free Worker for global ranks</p>
         </div>
-        <button class="btn" id="sync-btn">Sync</button>
+        <button class="btn" id="sync-btn" type="button">Refresh</button>
       </div>
       <div id="lb-list" style="display:flex;flex-direction:column;gap:8px;"></div>
     </div>
 
-    <div class="toast" id="toast">Ready.</div>
+    <div class="toast" id="toast">Ready. Tap MINE to earn points!</div>
   </div>
 
   <nav>
     <div class="nav-inner">
-      <button class="nav-btn active" data-tab="mine">⛏️<span>Mine</span></button>
-      <button class="nav-btn" data-tab="shop">🚀<span>Upgrades</span></button>
-      <button class="nav-btn" data-tab="quests">🎯<span>Quests</span></button>
-      <button class="nav-btn" data-tab="rank">🏆<span>Top</span></button>
+      <button class="nav-btn active" data-tab="mine" type="button">⛏️<span>Mine</span></button>
+      <button class="nav-btn" data-tab="shop" type="button">🚀<span>Upgrades</span></button>
+      <button class="nav-btn" data-tab="quests" type="button">🎯<span>Quests</span></button>
+      <button class="nav-btn" data-tab="rank" type="button">🏆<span>Top</span></button>
     </div>
   </nav>
 
   <script>
-    // =========================================================================
-    // 100% FREE CONFIGURATION (NO CREDIT CARD REQUIRED ANYWHERE)
-    // 1. Deploy worker.js on Cloudflare Free Plan & paste URL below.
-    // 2. Get free Block ID at partner.adsgram.ai & paste below.
-    // =========================================================================
+    window.addEventListener("error", (ev) => {
+      const t = document.getElementById("toast");
+      if (t) t.textContent = "Notice: " + (ev.message || "Recovered safely.");
+    });
+
     const CONFIG = {
-      API_URL: "",          // e.g. "https://gemini-bot.YOUR_SUBDOMAIN.workers.dev"
-      ADSGRAM_BLOCK_ID: "", // e.g. "1234"
+      API_URL: "",
+      ADSGRAM_BLOCK_ID: "",
       BOT_USERNAME: "YOUR_BOT_USERNAME"
     };
 
-    const tg = window.Telegram?.WebApp;
-    const isTg = Boolean(tg && tg.initData);
+    let tg = null;
+    let isTg = false;
+    try {
+      tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+      isTg = Boolean(tg && typeof tg.initData === "string" && tg.initData.length > 0);
+    } catch (_) {}
 
-    let state = {
+    const state = {
       score: 0,
       taps: 0,
       tapLvl: 1,
@@ -290,13 +288,15 @@
       lastSeen: Date.now()
     };
 
-    // Zero-Dependency Web Audio Synthesizer
     const AudioFX = (() => {
       let ctx = null;
       const play = (freq, type = "sine", dur = 0.08, gainVal = 0.08) => {
         if (!state.sound) return;
         try {
-          ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return;
+          ctx = ctx || new AudioCtx();
+          if (ctx.state === "suspended") ctx.resume();
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = type;
@@ -318,7 +318,7 @@
     })();
 
     const el = (id) => document.getElementById(id);
-    const toast = (msg) => { el("toast").textContent = msg; };
+    const toast = (msg) => { if (el("toast")) el("toast").textContent = msg; };
     const getMaxEnergy = () => 100 + (state.energyLvl - 1) * 50;
     const getTapPower = () => state.tapLvl * (state.vip ? 2 : 1);
     const getAutoPower = () => state.autoLvl * (state.vip ? 2 : 1);
@@ -327,38 +327,191 @@
     const getEnergyCost = () => Math.round(75 * Math.pow(1.9, state.energyLvl - 1));
 
     function spawnFloater(x, y, text) {
+      const px = typeof x === "number" && x > 0 ? x : window.innerWidth / 2;
+      const py = typeof y === "number" && y > 0 ? y : window.innerHeight / 2;
       const node = document.createElement("div");
       node.className = "floater";
       node.textContent = text;
-      node.style.left = `${x}px`;
-      node.style.top = `${y}px`;
-      document.body.appendChild(node);
-      setTimeout(() => node.remove(), 750);
-    }
-
-    function render() {
-      const maxE = getMaxEnergy();
-      state.energy = Math.min(maxE, state.energy);
-
-      el("score").textContent = Math.floor(state.score).toLocaleString();
-      el("stat-tap").textContent = `+${getTapPower()}`;
-      el("stat-auto").textContent = `${getAutoPower()}/s`;
-      el("stat-taps").textContent = state.taps.toLocaleString();
-      el("tap-sub").textContent = `+${getTapPower()} pt`;
+      node.style.left = `${px}px`;
+      node.style.top = `${py}px`; document.body.appendChild(node); setTimeout(() => node.remove(), 750); }  function render() { const maxE = getMaxEnergy(); state.energy = Math.min(maxE, Math.max(0, state.energy));  el("score").textContent = Math.floor(state.score).toLocaleString(); el("stat-tap").textContent = `+${getTapPower()}`;
+      el("stat-auto").textContent = `${getAutoPower()}/s`; el("stat-taps").textContent = state.taps.toLocaleString(); el("tap-sub").textContent = `+${getTapPower()} pt`;
       el("rank-pill").textContent = state.vip ? `VIP LVL ${state.tapLvl}` : `LVL ${state.tapLvl}`;
       el("sound-toggle").textContent = state.sound ? "🔊" : "🔇";
 
-      el("energy-text").textContent = `${Math.floor(state.energy)} / ${maxE}`;
-      el("energy-bar").style.width = `${(state.energy / maxE) * 100}%`;
+      el("energy-text").textContent = `${Math.floor(state.energy)} /${maxE}`;
+      el("energy-bar").style.width = `${(state.energy / maxE) * 100}\%`;  el("u-tap-lvl").textContent = state.tapLvl; el("u-tap-cost").textContent = getTapCost().toLocaleString(); el("u-auto-lvl").textContent = state.autoLvl; el("u-auto-cost").textContent = getAutoCost().toLocaleString(); el("u-energy-lvl").textContent = state.energyLvl; el("u-energy-cost").textContent = getEnergyCost().toLocaleString();  const m100Btn = el("m100-btn"); if (state.claimed100) { m100Btn.textContent = "Done"; m100Btn.disabled = true; } else { m100Btn.textContent = state.taps >= 100 ? "Claim" : `${state.taps}/100`;
+        m100Btn.disabled = state.taps < 100;
+      }
+    }
 
-      el("u-tap-lvl").textContent = state.tapLvl;
-      el("u-tap-cost").textContent = getTapCost().toLocaleString();
-      el("u-auto-lvl").textContent = state.autoLvl;
-      el("u-auto-cost").textContent = getAutoCost().toLocaleString();
-      el("u-energy-lvl").textContent = state.energyLvl;
-      el("u-energy-cost").textContent = getEnergyCost().toLocaleString();
+    function saveLocal() {
+      state.lastSeen = Date.now();
+      const raw = JSON.stringify(state);
+      try { localStorage.setItem("gemini_miner_v3", raw); } catch (_) {}
+      try {
+        if (isTg && tg.CloudStorage && typeof tg.CloudStorage.setItem === "function") {
+          tg.CloudStorage.setItem("gemini_miner_v3", raw);
+        }
+      } catch (_) {}
+    }
 
-      const m100Btn = el("m100-btn");
-      if (state.claimed100) {
-        m100Btn.textContent = "Done";
-        m100Btn
+    function applyOfflineProgress(saved) {
+      if (!saved || typeof saved !== "object") return;
+      Object.assign(state, saved);
+      const elapsedSec = Math.max(0, Math.floor((Date.now() - (state.lastSeen || Date.now())) / 1000));
+      state.energy = Math.min(getMaxEnergy(), state.energy + elapsedSec);
+      const offlineEarned = Math.min(elapsedSec, 10800) * getAutoPower();
+      if (offlineEarned > 0) {
+        state.score += offlineEarned;
+        toast(`Auto-miner earned +${offlineEarned.toLocaleString()} pts while away!`);
+      }
+    }
+
+    function loadState() {
+      try {
+        const localRaw = localStorage.getItem("gemini_miner_v3");
+        if (localRaw) applyOfflineProgress(JSON.parse(localRaw));
+      } catch (_) {}
+
+      try {
+        if (isTg && tg.CloudStorage && typeof tg.CloudStorage.getItem === "function") {
+          tg.CloudStorage.getItem("gemini_miner_v3", (err, cloudRaw) => {
+            if (!err && cloudRaw) {
+              try {
+                const parsed = JSON.parse(cloudRaw);
+                if ((parsed.score || 0) > state.score) {
+                  applyOfflineProgress(parsed);
+                  render();
+                }
+              } catch (_) {}
+            }
+          });
+        }
+      } catch (_) {}
+    }
+
+    el("sound-toggle").addEventListener("click", () => {
+      state.sound = !state.sound;
+      if (state.sound) AudioFX.tap();
+      render();
+      saveLocal();
+    });
+
+    document.querySelectorAll(".nav-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        const target = el(`tab-${btn.dataset.tab}`);
+        if (target) target.classList.add("active");
+        if (btn.dataset.tab === "rank") syncLeaderboard();
+      });
+    });
+
+    function handleMineTap(clientX, clientY) {
+      if (state.energy < 1) {
+        AudioFX.error();
+        toast("Out of energy! Wait to recharge or tap Watch Ad.");
+        try { tg?.HapticFeedback?.notificationOccurred("error"); } catch (_) {}
+        return;
+      }
+      const gain = getTapPower();
+      state.energy -= 1;
+      state.score += gain;
+      state.taps += 1;
+      AudioFX.tap();
+      spawnFloater(clientX, clientY - 12, `+${gain}`); try { tg?.HapticFeedback?.impactOccurred("light"); } catch (_) {} render(); saveLocal(); }  let lastTapTime = 0; el("tap-btn").addEventListener("pointerdown", (e) => { lastTapTime = Date.now(); handleMineTap(e.clientX, e.clientY); }); el("tap-btn").addEventListener("click", (e) => { if (Date.now() - lastTapTime < 250) return; handleMineTap(e.clientX, e.clientY); });  el("buy-tap").addEventListener("click", () => { const cost = getTapCost(); if (state.score < cost) { AudioFX.error(); return toast(`Need ${cost - Math.floor(state.score)} more pts.`); }
+      state.score -= cost;
+      state.tapLvl += 1;
+      AudioFX.upgrade();
+      toast(`Multi-Tap upgraded to Level ${state.tapLvl}!`); render(); saveLocal(); });  el("buy-auto").addEventListener("click", () => { const cost = getAutoCost(); if (state.score < cost) { AudioFX.error(); return toast(`Need ${cost - Math.floor(state.score)} more pts.`); }
+      state.score -= cost;
+      state.autoLvl += 1;
+      AudioFX.upgrade();
+      toast(`Auto-Miner upgraded to ${getAutoPower()}/sec!`); render(); saveLocal(); });  el("buy-energy").addEventListener("click", () => { const cost = getEnergyCost(); if (state.score < cost) { AudioFX.error(); return toast(`Need ${cost - Math.floor(state.score)} more pts.`); }
+      state.score -= cost;
+      state.energyLvl += 1;
+      state.energy = getMaxEnergy();
+      AudioFX.upgrade();
+      toast(`Max Energy increased to ${getMaxEnergy()}!`); render(); saveLocal(); });  el("ad-btn").addEventListener("click", async () => { const grantReward = (note) => { state.energy = getMaxEnergy(); state.score += 500; AudioFX.reward(); toast(note \vert{}\vert{} "Reward claimed: Full Energy + 500 pts!"); render(); saveLocal(); };  if (CONFIG.ADSGRAM_BLOCK_ID && window.Adsgram && typeof window.Adsgram.init === "function") { try { const controller = window.Adsgram.init({ blockId: CONFIG.ADSGRAM_BLOCK_ID }); await controller.show(); grantReward("Rewarded ad complete: Full Energy + 500 pts!"); } catch (_) { AudioFX.error(); toast("Ad closed early or unavailable right now."); } } else { grantReward("Free refill +500 pts granted (add AdsGram Block ID for live ads)."); } });  el("stars-btn").addEventListener("click", async () => { if (!CONFIG.API_URL) { AudioFX.error(); return toast("Set free Worker API_URL in CONFIG to enable Telegram Stars."); } try { const res = await fetch(`${CONFIG.API_URL}/create-invoice`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ initData: tg?.initData || "" })
+        });
+        const data = await res.json();
+        if (data.invoiceUrl && isTg && typeof tg.openInvoice === "function") {
+          tg.openInvoice(data.invoiceUrl, (status) => {
+            if (status === "paid") {
+              state.vip = true;
+              state.score += 5000;
+              AudioFX.reward();
+              toast("VIP Boost unlocked! +5,000 pts & 2x multiplier.");
+              render();
+              saveLocal();
+            }
+          });
+        }
+      } catch (_) {
+        AudioFX.error();
+        toast("Could not reach backend.");
+      }
+    });
+
+    el("daily-btn").addEventListener("click", () => {
+      const dayMs = 24 * 60 * 60 * 1000;
+      if (Date.now() - state.lastDaily < dayMs) {
+        AudioFX.error();
+        return toast("Daily reward already claimed. Come back in 24h!");
+      }
+      state.lastDaily = Date.now();
+      state.score += 250;
+      AudioFX.reward();
+      toast("Claimed +250 daily check-in points!");
+      render();
+      saveLocal();
+    });
+
+    el("m100-btn").addEventListener("click", () => {
+      if (state.claimed100 || state.taps < 100) return;
+      state.claimed100 = true;
+      state.score += 500;
+      AudioFX.reward();
+      toast("100-Tap Milestone unlocked: +500 pts!");
+      render();
+      saveLocal();
+    });
+
+    el("invite-btn").addEventListener("click", () => {
+      const uid = tg?.initDataUnsafe?.user?.id || "guest";
+      const link = `https://t.me/${CONFIG.BOT_USERNAME}/app?startapp=ref_${uid}`;
+      const text = "Mine points with me on Telegram!";
+      if (isTg && typeof tg.openTelegramLink === "function") {
+        tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`);
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(
+          () => toast("Copied referral link to clipboard."),
+          () => toast("Referral link: " + link)
+        );
+      } else {
+        toast("Referral link: " + link);
+      }
+    });
+
+    async function syncLeaderboard() {
+      const listEl = el("lb-list");
+      const user = tg?.initDataUnsafe?.user;
+      const myName = user ? [user.first_name, user.last_name].filter(Boolean).join(" ") : "You (Local)";
+
+      if (!CONFIG.API_URL) {
+        listEl.innerHTML = `<div class="lb-row"><span>#1 ${myName}</span><strong>${Math.floor(state.score).toLocaleString()} pts</strong></div>`; return; }  try { const res = await fetch(`${CONFIG.API_URL}/sync`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            initData: tg?.initData || "",
+            score: Math.floor(state.score),
+            ref: tg?.initDataUnsafe?.start_param || ""
+          })
+        });
+        const data = await res.json();
+        listEl.innerHTML = (data.top || []).map((row, idx) =>
+          `<div class="lb-row"><span>#${idx + 1
