@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Gemini Tap Miner</title>
-  <!-- Official Telegram Mini Apps SDK (Free) -->
+  <!-- Official Telegram Mini Apps SDK ($0 Free) -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- AdsGram Rewarded Video SDK (Free, $0 upfront) -->
+  <!-- AdsGram Rewarded Video SDK ($0 Upfront) -->
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
   <style>
     :root {
@@ -31,8 +31,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 16px 14px 88px;
+      padding: 16px 14px 92px;
       user-select: none;
+      overflow-x: hidden;
     }
 
     .app { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 14px; }
@@ -48,8 +49,13 @@
     }
     .user h1 { font-size: 15px; font-weight: 600; }
     .user p { font-size: 11px; color: var(--hint); }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .sound-btn {
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text);
+      border-radius: 10px; padding: 5px 8px; font-size: 13px; cursor: pointer;
+    }
     .pill {
-      font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px;
       background: rgba(59, 130, 246, 0.16); color: var(--accent);
     }
 
@@ -57,6 +63,7 @@
     .panel.active { display: flex; }
 
     .hero {
+      position: relative;
       background: var(--card); border: 1px solid var(--border); border-radius: 20px;
       padding: 22px 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px;
     }
@@ -65,14 +72,24 @@
     .score { font-size: 46px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
 
     .tap-btn {
-      width: 152px; height: 152px; border-radius: 50%; border: none;
+      width: 156px; height: 156px; border-radius: 50%; border: none;
       background: radial-gradient(circle at 30% 30%, var(--accent), #1d4ed8);
       color: var(--accent-text); font-size: 20px; font-weight: 800; cursor: pointer;
-      box-shadow: 0 12px 28px rgba(59, 130, 246, 0.35); transition: transform 0.07s ease;
+      box-shadow: 0 12px 28px rgba(59, 130, 246, 0.35); transition: transform 0.06s ease;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
     }
-    .tap-btn:active { transform: scale(0.93); }
+    .tap-btn:active { transform: scale(0.92); }
     .tap-btn small { font-size: 12px; font-weight: 500; opacity: 0.9; }
+
+    .floater {
+      position: fixed; pointer-events: none; font-weight: 800; font-size: 18px;
+      color: var(--accent); text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      animation: floatUp 0.75s ease-out forwards; z-index: 999;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -64px) scale(1.2); }
+    }
 
     .energy-wrap { width: 100%; }
     .energy-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); margin-bottom: 6px; }
@@ -120,10 +137,13 @@
         <div class="avatar" id="avatar">G</div>
         <div>
           <h1 id="username">Guest Miner</h1>
-          <p id="env-label">Free Tier • Syncing...</p>
+          <p id="env-label">$0 Free Stack</p>
         </div>
       </div>
-      <span class="pill" id="rank-pill">LVL 1</span>
+      <div class="header-actions">
+        <button class="sound-btn" id="sound-toggle" title="Toggle Sound">🔊</button>
+        <span class="pill" id="rank-pill">LVL 1</span>
+      </div>
     </header>
 
     <!-- TAB 1: MINE -->
@@ -132,6 +152,7 @@
         <div class="stats-row">
           <span>Tap: <strong id="stat-tap">+1</strong></span>
           <span>Auto: <strong id="stat-auto">0/s</strong></span>
+          <span>Total Taps: <strong id="stat-taps">0</strong></span>
         </div>
         <div class="score" id="score">0</div>
         <button class="tap-btn" id="tap-btn">MINE<small id="tap-sub">+1 pt</small></button>
@@ -200,6 +221,14 @@
 
       <div class="card">
         <div class="card-info">
+          <h3>🏅 100 Taps Milestone</h3>
+          <p id="m100-desc">Tap 100 times for +500 bonus points</p>
+        </div>
+        <button class="btn green" id="m100-btn">Claim</button>
+      </div>
+
+      <div class="card">
+        <div class="card-info">
           <h3>👥 Invite a Friend (+1,000 pts)</h3>
           <p>Share your personal Telegram Mini App link</p>
         </div>
@@ -212,7 +241,7 @@
       <div class="card">
         <div class="card-info">
           <h3>🏆 Global Top Miners</h3>
-          <p>Powered by Cloudflare Workers + D1 ($0 Free Tier)</p>
+          <p>Verified via HMAC-SHA256 on Cloudflare D1 ($0)</p>
         </div>
         <button class="btn" id="sync-btn">Sync</button>
       </div>
@@ -233,12 +262,12 @@
 
   <script>
     // =========================================================================
-    // CONFIGURATION (100% FREE TIER SERVICES ONLY)
-    // 1. Deploy the free Cloudflare Worker code and paste its workers.dev URL below.
-    // 2. Get a free Block ID from partner.adsgram.ai and paste it below.
+    // 100% FREE CONFIGURATION (NO CREDIT CARD REQUIRED ANYWHERE)
+    // 1. Deploy worker.js on Cloudflare Free Plan & paste URL below.
+    // 2. Get free Block ID at partner.adsgram.ai & paste below.
     // =========================================================================
     const CONFIG = {
-      API_URL: "", // e.g. "https://gemini-bot.YOUR_SUBDOMAIN.workers.dev"
+      API_URL: "",          // e.g. "https://gemini-bot.YOUR_SUBDOMAIN.workers.dev"
       ADSGRAM_BLOCK_ID: "", // e.g. "1234"
       BOT_USERNAME: "YOUR_BOT_USERNAME"
     };
@@ -248,18 +277,88 @@
 
     let state = {
       score: 0,
+      taps: 0,
       tapLvl: 1,
       autoLvl: 0,
       energyLvl: 1,
       energy: 100,
       vip: false,
+      sound: true,
+      claimed100: false,
+      claimedRef: false,
       lastDaily: 0,
       lastSeen: Date.now()
     };
+
+    // Zero-Dependency Web Audio Synthesizer
+    const AudioFX = (() => {
+      let ctx = null;
+      const play = (freq, type = "sine", dur = 0.08, gainVal = 0.08) => {
+        if (!state.sound) return;
+        try {
+          ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, ctx.currentTime);
+          gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + dur);
+        } catch (_) {}
+      };
+      return {
+        tap: () => play(520, "triangle", 0.06, 0.07),
+        upgrade: () => { play(587, "sine", 0.09, 0.09); setTimeout(() => play(880, "sine", 0.14, 0.09), 70); },
+        reward: () => { play(660, "sine", 0.08, 0.09); setTimeout(() => play(990, "sine", 0.16, 0.09), 80); },
+        error: () => play(180, "sawtooth", 0.12, 0.06)
+      };
+    })();
 
     const el = (id) => document.getElementById(id);
     const toast = (msg) => { el("toast").textContent = msg; };
     const getMaxEnergy = () => 100 + (state.energyLvl - 1) * 50;
     const getTapPower = () => state.tapLvl * (state.vip ? 2 : 1);
     const getAutoPower = () => state.autoLvl * (state.vip ? 2 : 1);
-    const getTap
+    const getTapCost = () => Math.round(25 * Math.pow(1.8, state.tapLvl - 1));
+    const getAutoCost = () => Math.round(100 * Math.pow(2.0, state.autoLvl));
+    const getEnergyCost = () => Math.round(75 * Math.pow(1.9, state.energyLvl - 1));
+
+    function spawnFloater(x, y, text) {
+      const node = document.createElement("div");
+      node.className = "floater";
+      node.textContent = text;
+      node.style.left = `${x}px`;
+      node.style.top = `${y}px`;
+      document.body.appendChild(node);
+      setTimeout(() => node.remove(), 750);
+    }
+
+    function render() {
+      const maxE = getMaxEnergy();
+      state.energy = Math.min(maxE, state.energy);
+
+      el("score").textContent = Math.floor(state.score).toLocaleString();
+      el("stat-tap").textContent = `+${getTapPower()}`;
+      el("stat-auto").textContent = `${getAutoPower()}/s`;
+      el("stat-taps").textContent = state.taps.toLocaleString();
+      el("tap-sub").textContent = `+${getTapPower()} pt`;
+      el("rank-pill").textContent = state.vip ? `VIP LVL ${state.tapLvl}` : `LVL ${state.tapLvl}`;
+      el("sound-toggle").textContent = state.sound ? "🔊" : "🔇";
+
+      el("energy-text").textContent = `${Math.floor(state.energy)} / ${maxE}`;
+      el("energy-bar").style.width = `${(state.energy / maxE) * 100}%`;
+
+      el("u-tap-lvl").textContent = state.tapLvl;
+      el("u-tap-cost").textContent = getTapCost().toLocaleString();
+      el("u-auto-lvl").textContent = state.autoLvl;
+      el("u-auto-cost").textContent = getAutoCost().toLocaleString();
+      el("u-energy-lvl").textContent = state.energyLvl;
+      el("u-energy-cost").textContent = getEnergyCost().toLocaleString();
+
+      const m100Btn = el("m100-btn");
+      if (state.claimed100) {
+        m100Btn.textContent = "Done";
+        m100Btn
